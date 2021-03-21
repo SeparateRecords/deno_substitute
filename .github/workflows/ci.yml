@@ -1,0 +1,20 @@
+name: CI
+on:
+  push:
+    paths:
+      - "**/*.ts"
+      - ".github/workflows/*.yml"
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denolib/setup-deno@v2
+      - name: Print version
+        run: deno --version
+      - name: Run tests
+        run: deno test
+      - name: Check formatting
+        run: deno fmt --check *.ts
+      - name: Lint source code
+        run: deno lint --unstable

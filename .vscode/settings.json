@@ -1,0 +1,14 @@
+{
+  "deno.enable": true,
+  "deno.unstable": true,
+  "deno.lint": true,
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "denoland.vscode-deno",
+    "editor.matchBrackets": "always"
+  },
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.renderWhitespace": "boundary",
+  },
+}
