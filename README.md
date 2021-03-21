@@ -10,7 +10,7 @@ Perfect for environment variables, flexible enough for whatever.
 `substitute` substitutes variables using a function.
 
 ```typescript
-import { substitute } from "https://deno.land/x/substitute@0.1.0/mod.ts";
+import { substitute } from "https://deno.land/x/substitute@v0.1.0/mod.ts";
 
 substitute("Welcome $HOME", Deno.env.get);
 // => "Welcome /home/user"
