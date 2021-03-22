@@ -1,7 +1,7 @@
 import {
   assertEquals,
   assertThrows,
-} from "https://deno.land/std@0.90.0/testing/asserts.ts";
+} from "https://deno.land/std@0.91.0/testing/asserts.ts";
 import { substitute, SubstituteOptions } from "./substitute.ts";
 import {
   BadCharacterError,
@@ -93,8 +93,8 @@ const strictCases: (TestCase & FallibleTestErrorType)[] = [
     want: "abcDEF/HELLOghi",
   },
   {
-    have: "${\u1234}",
-    want: "${\u1234}",
+    have: "${yes=no}",
+    want: "${yes=no}",
     error: BadCharacterError,
   },
   {
@@ -126,8 +126,8 @@ const strictCases: (TestCase & FallibleTestErrorType)[] = [
     error: UnterminatedVariableError,
   },
   {
-    have: "%\u1234%",
-    want: "%\u1234%",
+    have: "%yes=no%",
+    want: "%yes=no%",
     error: BadCharacterError,
   },
   {
