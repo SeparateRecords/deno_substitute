@@ -19,6 +19,12 @@ type FallibleTestErrorType = {
   error?: typeof ParseError;
 };
 
+/** Make the input UPPER CASE unless the input is "RETURN_UNDEFINED" */
+const upperCasePls = (key: string): string | undefined => {
+  if (key === "RETURN_UNDEFINED") return undefined;
+  return key.toUpperCase();
+};
+
 /**
  * Each case *must* succeed when not in strict mode, and fail with the
  * given error in strict mode. If there is no error, it is expected
@@ -62,6 +68,14 @@ const strictCases: (TestCase & FallibleTestErrorType)[] = [
     want: "//PC/C$/Windows",
   },
   {
+    have: "A $RETURN_UNDEFINED C",
+    want: "A  C",
+  },
+  {
+    have: "$RETURN_UNDEFINED",
+    want: "",
+  },
+  {
     have: "${",
     want: "${",
     error: UnterminatedVariableError,
@@ -96,6 +110,14 @@ const strictCases: (TestCase & FallibleTestErrorType)[] = [
     have: "${yes=no}",
     want: "${yes=no}",
     error: BadCharacterError,
+  },
+  {
+    have: "${RETURN_UNDEFINED}",
+    want: "",
+  },
+  {
+    have: "a${RETURN_UNDEFINED}c",
+    want: "ac",
   },
   {
     have: "%",
@@ -143,25 +165,31 @@ const strictCases: (TestCase & FallibleTestErrorType)[] = [
     want: "abcDEF/HELLOghi%",
     error: UnterminatedVariableError,
   },
+  {
+    have: "%RETURN_UNDEFINED%",
+    want: "",
+  },
+  {
+    have: "a%RETURN_UNDEFINED%c",
+    want: "ac",
+  },
 ];
 
 Deno.test("substitute { strict: true }", () => {
-  const fn = (key: string) => key.toUpperCase();
   for (const { have, want, error } of strictCases) {
     if (error !== undefined) {
-      assertThrows(() => substitute(have, fn), error);
+      assertThrows(() => substitute(have, upperCasePls), error);
     } else {
       // shouldn't throw. the test will fail if it does
-      const got = substitute(have, fn);
+      const got = substitute(have, upperCasePls);
       assertEquals(got, want);
     }
   }
 });
 
 Deno.test("substitute { strict: false }", () => {
-  const fn = (key: string) => key.toUpperCase();
   for (const { have, want } of strictCases) {
-    const got = substitute(have, fn, { strict: false });
+    const got = substitute(have, upperCasePls, { strict: false });
     assertEquals(got, want);
   }
 });
@@ -202,9 +230,8 @@ const optionCases: (TestCase & SubstituteOptions)[] = [
 ];
 
 Deno.test("substitute { percent, dollar }", () => {
-  const fn = (s: string) => s.toUpperCase();
   for (const { have, want, percent, dollar, strict } of optionCases) {
-    const got = substitute(have, fn, { percent, dollar, strict });
+    const got = substitute(have, upperCasePls, { percent, dollar, strict });
     assertEquals(got, want);
   }
 });
